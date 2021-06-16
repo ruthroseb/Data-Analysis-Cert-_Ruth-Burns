@@ -1,4 +1,3 @@
-import requests
 import pandas as pd
 
 # import a CSV file into a Pandas DataFrame
@@ -11,6 +10,10 @@ print(data.describe())
 print(data.head())
 print(data.tail())
 print(data.isna().any())
+
+# Dropping duplicates - only checked for the name, because duplicate numbers should remain.
+data_clean=data.drop_duplicates(subset="Food product")
+data_clean["Food product"].value_counts(normalize=True)
 
 # sorting
 Total_Emissions_descending=data.sort_values("Total_emissions", ascending=False)
@@ -33,8 +36,6 @@ print(processed_products)
 print(Total_Emissions_descending)
 print(data.loc[:5,['Food product','Packging', 'Total_emissions']])
 
-# Dropping duplicates - only checked for the name, because duplicate numbers should remain.
-data_clean=data.drop_duplicates(subset="Food product")
-data_clean["Food product"].value_counts(normalize=True)
+
 
 
