@@ -37,5 +37,6 @@ print(Total_Emissions_descending)
 print(data.loc[:5,['Food product','Packging', 'Total_emissions']])
 
 
-
-
+for lab, row in data.iterrows():
+    print(lab)
+    print(row)

@@ -19,7 +19,7 @@ print(r_harrypotter.json()["Ratings"])
 # looping a dictionary
 x=r_harrypotter.json()
 for key, value in x.items():
-    print(key + ":" + str(value))
+    print(key + ": " + str(value))
 
 
 
