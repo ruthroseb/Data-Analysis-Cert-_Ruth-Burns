@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 import numpy as np
-import matplotlib
+import matplotlib.pyplot as plt
 
 # API (omdb api key is 87c8a7a3)
 r_harrypotter=requests.get('http://www.omdbapi.com/?apikey=87c8a7a3&t=harry+potter&plot=full')
@@ -28,3 +28,7 @@ df_lordoftherings = pd.DataFrame.from_dict(y, orient='index')
 
 concat_data=pd.concat([df_harrypotter,df_lordoftherings], axis=1)
 print(concat_data)
+
+ratings=concat_data.iloc[15:17,0:2]
+print(ratings)
+

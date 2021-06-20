@@ -1,5 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+
 
 # import a CSV file into a Pandas DataFrame
 data = pd.read_csv('Food_Production.csv')
@@ -29,7 +32,7 @@ print(type(Total_Emissions_descending))
 data_total_emissions=data.loc[:,['Food product', 'Total_emissions']]
 Total_Emissions_descending=data_total_emissions.sort_values("Total_emissions", ascending=False)
 animal_products=data.loc[data['Animal Feed']!=0]
-animal_products_descending=animal_products.sort_values("Total_emissions", ascending=False)
+animal_products_descending=animal_products.sort_values("Total_emissions",ascending=False)
 print(animal_products)
 animal_products_mean=animal_products['Total_emissions'].mean()
 
@@ -67,10 +70,12 @@ fig, ax = plt.subplots()
 plt.xticks(rotation=45)
 ax.plot(oils_desc['Food product'],oils_desc['Total_emissions'],marker='o',linestyle='None', color='y')
 ax.bar(oils_desc['Food product'], oils_desc['Land use change'],label='Land use change')
-ax.bar(oils_desc['Food product'], oils_desc['Farm'],label='Farm')
-ax.bar(oils_desc['Food product'], oils_desc['Processing'],label='Processing')
-ax.bar(oils_desc['Food product'], oils_desc['Packging'],label='Packging')
-ax.set_title('Total Emissions and impacting variables by Oil Type')
+ax.bar(oils_desc['Food product'], oils_desc['Farm'],bottom=oils_desc['Land use change'], label='Farm')
+ax.bar(oils_desc['Food product'], oils_desc['Processing'],bottom=oils_desc['Land use change']+oils_desc['Farm'],label='Processing')
+ax.bar(oils_desc['Food product'], oils_desc['Packging'],bottom=oils_desc['Land use change']+oils_desc['Farm']+oils_desc['Processing'],label='Packging')
+ax.bar(oils_desc['Food product'], oils_desc['Transport'],bottom=oils_desc['Land use change']+oils_desc['Farm']+oils_desc['Processing']+oils_desc['Packging'],label='Transport')
+ax.set_title('Total emissions and impacting variables by oil type')
+plt.ylabel("Greenhouse emissions (kg CO2 - equivalents per kg product)")
 plt.legend()
 
 fig, ax = plt.subplots()
@@ -84,6 +89,9 @@ ax.bar(animal_products_descending['Food product'], animal_products_descending['T
 ax.bar(animal_products_descending['Food product'], animal_products_descending['Packging'],label='Packging')
 ax.bar(animal_products_descending['Food product'], animal_products_descending['Retail'],label='Retail')
 ax.set_title('Animal Food Product Environmental impact by variables')
+plt.ylabel("Greenhouse emissions (kg CO2 - equivalents per kg product)")
+plt.xlabel("Food Category")
+
 plt.legend()
 
 
@@ -91,7 +99,11 @@ fig, ax = plt.subplots()
 plt.xticks(rotation=45)
 x=("Animal Products", "Oil Products", "Processed Products", "Non Processed Products", "Fruits", "Vegetables")
 y = (animal_products_mean, oils_mean, process_Products_mean, nonprocessed_products_mean, fruits_mean,vegetables_mean)
-ax.plot(x,y,marker='o',linestyle='None', color='y')
+ax.plot(x,y,marker='X',linestyle='None', color='r')
+ax.set_title('Total emissions by food category')
+plt.ylabel("Greenhouse emissions (kg CO2 - equivalents per kg product)")
+plt.xlabel("Food Category")
+
 
 
 fig, ax = plt.subplots()
@@ -102,5 +114,27 @@ ax.bar(animal_products_descending['Food product'], animal_products_descending['G
 ax.bar(animal_products_descending['Food product'], animal_products_descending['Land use per 1000kcal (m² per 1000kcal)'],bottom=animal_products_descending['Greenhouse gas emissions per 1000kcal (kgCO₂eq per 1000kcal)'],label='Land use')
 ax.set_title('Animal Food Product Environmental impact by variables (per 1000kcal)')
 plt.legend()
+
+#find food with low emissions
+low_emmissions_product=data.loc[data['Total_emissions']<2]
+print(low_emmissions_product)
+
+#comparing emission product weight to calories
+fig, ax = plt.subplots()
+plt.xticks(rotation=45)
+ax.plot(animal_products_descending['Food product'],animal_products_descending['Total_emissions'], label="Emissions per kg of product", marker='o' )
+ax.plot(animal_products_descending['Food product'],animal_products_descending['Greenhouse gas emissions per 1000kcal (kgCO₂eq per 1000kcal)'], label="Emissions per 1000kcal", marker='o')
+ax.plot(animal_products_descending['Food product'],animal_products_descending['Greenhouse gas emissions per 100g protein (kgCO₂eq per 100g protein)'], label="Emissions per 100g protein", marker='o')
+ax.set_title('Animal Food ProductTotal Emissions: /kg of product v /kg 1000kcal v /100g protein')
+plt.legend()
+
+
+fig, ax = plt.subplots()
+sns.scatterplot(data=low_emmissions_product, x="Total_emissions", y="Scarcity-weighted water use per kilogram (liters per kilogram)")
+plt.text(0.2, 220000, "Nuts")
+ax.set_title('Low emission food products by scarcity water use')
+
+plt.legend()
+
 
 plt.show()
