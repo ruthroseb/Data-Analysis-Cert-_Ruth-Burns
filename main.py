@@ -80,23 +80,6 @@ plt.legend()
 
 fig, ax = plt.subplots()
 plt.xticks(rotation=45)
-ax.bar(animal_products_descending['Food product'], animal_products_descending['Animal Feed'],label="Animal Feed")
-ax.bar(animal_products_descending['Food product'], animal_products_descending['Land use change'],label='Land use change')
-ax.bar(animal_products_descending['Food product'], animal_products_descending['Animal Feed'],label='Animal Feed')
-ax.bar(animal_products_descending['Food product'], animal_products_descending['Farm'],label='Farm')
-ax.bar(animal_products_descending['Food product'], animal_products_descending['Processing'],label='Processing')
-ax.bar(animal_products_descending['Food product'], animal_products_descending['Transport'],label='Transport')
-ax.bar(animal_products_descending['Food product'], animal_products_descending['Packging'],label='Packging')
-ax.bar(animal_products_descending['Food product'], animal_products_descending['Retail'],label='Retail')
-ax.set_title('Animal Food Product Environmental impact by variables')
-plt.ylabel("Greenhouse emissions (kg CO2 - equivalents per kg product)")
-plt.xlabel("Food Category")
-
-plt.legend()
-
-
-fig, ax = plt.subplots()
-plt.xticks(rotation=45)
 x=("Animal Products", "Oil Products", "Processed Products", "Non Processed Products", "Fruits", "Vegetables")
 y = (animal_products_mean, oils_mean, process_Products_mean, nonprocessed_products_mean, fruits_mean,vegetables_mean)
 ax.plot(x,y,marker='X',linestyle='None', color='r')
@@ -105,15 +88,6 @@ plt.ylabel("Greenhouse emissions (kg CO2 - equivalents per kg product)")
 plt.xlabel("Food Category")
 
 
-
-fig, ax = plt.subplots()
-plt.xticks(rotation=45)
-ax.bar(animal_products_descending['Food product'], animal_products_descending['Eutrophying emissions per 1000kcal (gPO₄eq per 1000kcal)'], label="Eutrophying emissions")
-ax.bar(animal_products_descending['Food product'], animal_products_descending['Freshwater withdrawals per 1000kcal (liters per 1000kcal)'],bottom=animal_products_descending['Eutrophying emissions per 1000kcal (gPO₄eq per 1000kcal)'],label='Freshwater withdrawals')
-ax.bar(animal_products_descending['Food product'], animal_products_descending['Greenhouse gas emissions per 1000kcal (kgCO₂eq per 1000kcal)'],bottom=animal_products_descending['Freshwater withdrawals per 1000kcal (liters per 1000kcal)'],label='Greenhouse gas emissions')
-ax.bar(animal_products_descending['Food product'], animal_products_descending['Land use per 1000kcal (m² per 1000kcal)'],bottom=animal_products_descending['Greenhouse gas emissions per 1000kcal (kgCO₂eq per 1000kcal)'],label='Land use')
-ax.set_title('Animal Food Product Environmental impact by variables (per 1000kcal)')
-plt.legend()
 
 #find food with low emissions
 low_emmissions_product=data.loc[data['Total_emissions']<2]
@@ -130,11 +104,17 @@ plt.legend()
 
 
 fig, ax = plt.subplots()
-sns.scatterplot(data=low_emmissions_product, x="Total_emissions", y="Scarcity-weighted water use per kilogram (liters per kilogram)")
+sns.scatterplot(data=low_emmissions_product, x="Total_emissions", y="Scarcity-weighted water use per kilogram (liters per kilogram)", label="Low emission products")
 plt.text(0.2, 220000, "Nuts")
 ax.set_title('Low emission food products by scarcity water use')
-
 plt.legend()
+
+
+
+sns.relplot(x="Land use per 1000kcal (m² per 1000kcal)", y="Freshwater withdrawals per 1000kcal (liters per 1000kcal)", hue="Food product", size="Total_emissions",
+            sizes=(20,200), alpha=1, palette="muted",
+            height=6, data=data.loc[data['Total_emissions']>10])
+plt.title('Analysis of high emissions food products (Land use/Fresh water)')
 
 
 plt.show()
